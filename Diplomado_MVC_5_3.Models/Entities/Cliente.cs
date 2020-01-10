@@ -23,6 +23,9 @@ namespace Diplomado_MVC_5_3.Models.Entities
         public string Email { get; set; }
         public string Telefono { get; set; }
         public string Movil { get; set; }
+
+        [Display(Name = "Image")]
         public string ImageUrl { get; set; }
+        
     }
 }

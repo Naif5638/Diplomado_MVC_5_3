@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Diplomado_MVC_5_3.Models;
 using Diplomado_MVC_5_3.Models.DAL;
 using Diplomado_MVC_5_3.Models.Entities;
 
@@ -47,16 +48,32 @@ namespace Diplomado_MVC_5_3.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ClienteId,Nombres,Apellidos,Direccion,Email,Telefono,Movil,ImageUrl")] Cliente cliente)
+        public ActionResult Create(ClienteModel model)
         {
+
             if (ModelState.IsValid)
             {
+                string image = System.IO.Path.GetFileName(model.ImageUpload.FileName);
+                string path = Server.MapPath("~/Images/" + image);
+                model.ImageUpload.SaveAs(path);
+
+                model.ImageUrl = image;
+                Cliente cliente = new Cliente()
+                {
+                    Nombres = model.Nombres,
+                    Apellidos = model.Apellidos,
+                    Direccion = model.Direccion,
+                    Email = model.Email,
+                    Telefono = model.Telefono,
+                    Movil = model.Movil,
+                    ImageUrl = model.ImageUrl
+                };
                 db.Clientes.Add(cliente);
                 db.SaveChanges();
                 return RedirectToAction("Index");
-            }
 
-            return View(cliente);
+            }
+            return View(model);
         }
 
         // GET: Clientes/Edit/5
